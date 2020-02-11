@@ -1,0 +1,12 @@
+./gradlew clean build
+
+docker build . --tag mat013/kscript:1.0
+docker run -it -p 8080:8080 mat013/kscript:1.0
+
+docker login --username=mat013
+docker push mat013/kscript
+
+oc new-project kscript --description="KScript container for hacking" --display-name="kscript"
+oc new-app --docker-image mat013/kscript:1.0 --insecure-registry=true -l name=developer-pod
+
+oc expose svc/kscript
